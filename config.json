@@ -1,0 +1,31 @@
+{
+  "bot": {
+    "token": "MTM2NzU5MTc4MDcwNjQyMjg3NQ.G9P2YF.2SiTZCc6JQahrkocgJfpdO64kp1LG66gz22XQk",
+    "clientId": "1367591780706422875",
+    "clientSecret": "8gQsBZomKkVJU6x7IMn1oko_CeG7cKPz",
+    "ownerId": "1246506868977696811",
+    "name": "Discord Rewards Auth2Bot",
+    "version": "1.0"
+  },
+  "oauth2": {
+    "redirectUri": "https://auth2-bot.vercel.app/auth/callback",
+    "authBaseUrl": "https://auth2-bot.vercel.app/auth",
+    "scopes": ["identify", "email", "guilds.join"]
+  },
+  "webServer": {
+    "port": 3000,
+    "baseUrl": "https://auth2-bot.vercel.app"
+  },
+  "storage": {
+    "dir": "./storage"
+  },
+  "mongodb": {
+    "uri": "mongodb+srv://uptrical:berkay@guildcode.nnxcj.mongodb.net/auth2bot"
+  },
+  "verification": {
+    "defaultMessage": "Sunucumuza erişmek için hesabınızı doğrulamanız gerekmektedir. Aşağıdaki butona tıklayarak doğrulama işlemini gerçekleştirebilirsiniz.",
+    "enableDMNotification": true,
+    "buttonText": "Doğrula",
+    "successMessage": "Hesabınız başarıyla doğrulandı! Artık sunucumuza erişebilirsiniz."
+  }
+} 
