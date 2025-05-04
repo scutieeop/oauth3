@@ -3,6 +3,7 @@ const { Client, GatewayIntentBits, Partials, Collection, REST, Routes } = requir
 const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');
+const express = require('express');
 require('dotenv').config();
 
 // SUNUCU KURULUM BİLGİLERİ:
@@ -346,6 +347,9 @@ async function start() {
     console.error('MongoDB bağlantısı kurulamadı, bot çalışabilir ama veritabanı işlevleri çalışmayacak.');
     console.error('MongoDB URI kontrol edilmeli: ' + (config.mongodb.uri ? 'URI tanımlı' : 'URI tanımlı değil'));
   }
+
+  // Express web server'ı başlat
+  setupExpressServer();
   
   // Discord'a bağlan
   try {
@@ -354,6 +358,42 @@ async function start() {
     console.error('Discord bağlantı hatası:', error);
     process.exit(1);
   }
+}
+
+// Express server setup
+function setupExpressServer() {
+  // Initialize Express app
+  const app = express();
+  // Update PORT to use Render's PORT environment variable first
+  const PORT = process.env.PORT || process.env.WEB_SERVER_PORT || 3000;
+
+  // Middleware
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+
+  // Serve static files (if needed)
+  app.use(express.static(path.join(__dirname, 'public')));
+
+  // Routes
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  });
+
+  // Auth routes (placeholder, implement your OAuth2 routes)
+  app.get('/auth', (req, res) => {
+    res.send('Auth endpoint');
+  });
+
+  app.get('/auth/callback', (req, res) => {
+    res.send('Auth callback endpoint');
+  });
+
+  // Start the server
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Express server running on port ${PORT}`);
+  });
+
+  return app;
 }
 
 // Başlat
