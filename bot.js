@@ -158,7 +158,7 @@ try {
     if ('data' in command && 'execute' in command) {
       client.commands.set(command.data.name, command);
       rewardsCommands.push(command.data.toJSON());
-      console.log(`✓ "${command.data.name}" rewards sunucu komutu yüklendi (Sadece Sunucu ID: ${REWARDS_GUILD_ID} için)`);
+      console.log(`✓ "${command.data.name}" rewards sunucu komutu yüklendi (Rewards sunucuları için: ${REWARDS_GUILD_ID.join(', ')})`);
     } else {
       console.log(`✗ "${file}" rewards sunucu komutu data veya execute içermiyor`);
     }
@@ -213,10 +213,12 @@ async function clearOldCommands() {
     );
     
     // Rewards sunucu komutlarını temizle
-    await rest.put(
-      Routes.applicationGuildCommands(config.bot.clientId, REWARDS_GUILD_ID),
-      { body: [] }
-    );
+    for (const guildId of REWARDS_GUILD_ID) {
+      await rest.put(
+        Routes.applicationGuildCommands(config.bot.clientId, guildId),
+        { body: [] }
+      );
+    }
     
     console.log('Eski komutlar başarıyla temizlendi.');
   } catch (error) {
@@ -301,16 +303,18 @@ client.once('ready', async () => {
       { body: guildCommands },
     );
     
-    // Rewards sunucu komutlarını belirli sunucuya kaydet
-    await rest.put(
-      Routes.applicationGuildCommands(config.bot.clientId, REWARDS_GUILD_ID),
-      { body: rewardsCommands },
-    );
+    // Rewards sunucu komutlarını her iki rewards sunucusuna da kaydet
+    for (const guildId of REWARDS_GUILD_ID) {
+      await rest.put(
+        Routes.applicationGuildCommands(config.bot.clientId, guildId),
+        { body: rewardsCommands },
+      );
+      console.log(`- ${rewardsCommands.length} komut '${guildId}' sunucu ID'sine kaydedildi`);
+    }
     
     console.log('Uygulama (/) komutları başarıyla yenilendi.');
     console.log(`- ${globalCommands.length} global komut kaydedildi`);
     console.log(`- ${guildCommands.length} komut sadece '${SPECIFIC_GUILD_ID}' sunucu ID'sine kaydedildi`);
-    console.log(`- ${rewardsCommands.length} komut sadece '${REWARDS_GUILD_ID}' sunucu ID'sine kaydedildi`);
   } catch (error) {
     console.error('Komut kaydetme hatası:', error);
   }
