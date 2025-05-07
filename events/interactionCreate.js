@@ -32,7 +32,7 @@ const UserToken = mongoose.models.UserToken || mongoose.model('UserToken', UserT
 
 // Özel sunucu ID'leri
 const SPECIFIC_GUILD_ID = '1364256764018556989';
-const REWARDS_GUILD_ID = '1368180792089640970';
+const REWARDS_GUILD_ID = ['1368180792089640970', '1361740491674357881'];
 
 // Guild-specific komutları belirle
 let guildCommandNames = [];
@@ -145,7 +145,7 @@ module.exports = {
             
             // Rewards sunucu komutu filtrelemesi - Rewards-specific komutlar sadece rewards sunucusunda çalışabilir
             const isRewardsCommand = rewardsCommandNames.includes(interaction.commandName);
-            if (isRewardsCommand && interaction.guildId !== REWARDS_GUILD_ID) {
+            if (isRewardsCommand && !REWARDS_GUILD_ID.includes(interaction.guildId)) {
                 return await interaction.reply({ 
                     content: 'Bu komut sadece Rewards sunucusunda kullanılabilir.', 
                     ephemeral: true 
