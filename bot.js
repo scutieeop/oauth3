@@ -80,7 +80,7 @@ const rewardsCommands = [];
 
 // Özel sunucu ID'leri
 const SPECIFIC_GUILD_ID = '1364256764018556989';
-const REWARDS_GUILD_ID = '1368180792089640970';
+const REWARDS_GUILD_ID = ['1368180792089640970', '1361740491674357881'];
 
 // Storage directory setup
 const storageDir = path.join(__dirname, config.storage.dir);
