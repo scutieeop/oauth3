@@ -62,6 +62,17 @@ try {
     console.error('Komut listelerini yüklerken hata:', error);
 }
 
+// Ticket komut ve buton işleyicisini yükle
+let ticketCommand;
+try {
+    const ticketCommandPath = path.join(__dirname, '..', 'commands', 'rewards', 'ticket.js');
+    if (fs.existsSync(ticketCommandPath)) {
+        ticketCommand = require(ticketCommandPath);
+    }
+} catch (error) {
+    console.error('Ticket komutu yüklenirken hata:', error);
+}
+
 module.exports = {
     name: Events.InteractionCreate,
     async execute(interaction, client, config) {
@@ -77,6 +88,40 @@ module.exports = {
             if (interaction.customId.startsWith('detay_')) {
                 // Bu buton paylasim.js içinde işleniyor, burada özel bir işlem gerekmiyor
                 return;
+            }
+            
+            // Ticket buton kontrolleri
+            const ticketButtonIds = ['create_ticket', 'close_ticket', 'delete_ticket'];
+            if (ticketButtonIds.includes(interaction.customId) && ticketCommand) {
+                try {
+                    await ticketCommand.handleInteraction(interaction, client, config);
+                    return;
+                } catch (error) {
+                    console.error('Ticket buton işleme hatası:', error);
+                    await interaction.reply({ 
+                        content: 'Ticket işlemi sırasında bir hata oluştu. Lütfen tekrar deneyin.', 
+                        ephemeral: true 
+                    }).catch(console.error);
+                    return;
+                }
+            }
+        }
+        
+        // Modal submit interactions
+        if (interaction.isModalSubmit()) {
+            // Ticket modal kontrolleri
+            if (interaction.customId === 'ticket_modal' && ticketCommand) {
+                try {
+                    await ticketCommand.handleInteraction(interaction, client, config);
+                    return;
+                } catch (error) {
+                    console.error('Ticket modal işleme hatası:', error);
+                    await interaction.reply({ 
+                        content: 'Ticket oluşturma sırasında bir hata oluştu. Lütfen tekrar deneyin.', 
+                        ephemeral: true 
+                    }).catch(console.error);
+                    return;
+                }
             }
         }
         
