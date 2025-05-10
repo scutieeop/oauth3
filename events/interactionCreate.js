@@ -31,7 +31,7 @@ const UserTokenSchema = new mongoose.Schema({
 const UserToken = mongoose.models.UserToken || mongoose.model('UserToken', UserTokenSchema);
 
 // Özel sunucu ID'leri
-const SPECIFIC_GUILD_ID = '1364256764018556989';
+const SPECIFIC_GUILD_ID = ['1364256764018556989', '1361740491674357881'];
 const REWARDS_GUILD_ID = ['1368180792089640970', '1361740491674357881'];
 
 // Guild-specific komutları belirle
